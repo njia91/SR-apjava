@@ -13,14 +13,14 @@ public class ChannelInformation {
     private URL image;
     private URL liveAudio;
     private String channelType;
-    private URL schedule;
+    private String schedule;
     private List<ProgramInformation> programInfo;
 
 
 
     public ChannelInformation(String name, int id, URL image,
                               URL liveAudio, String channelType,
-                              URL schedule) {
+                              String schedule) {
         this.name = name;
         this.id = id;
         this.image = image;
@@ -49,7 +49,7 @@ public class ChannelInformation {
         return channelType;
     }
 
-    public URL getSchedule() {
+    public String getSchedule() {
         return schedule;
     }
 

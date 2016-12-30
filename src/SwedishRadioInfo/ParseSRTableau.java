@@ -1,37 +1,36 @@
 package SwedishRadioInfo;
 
-import com.mockobjects.util.Null;
-import jdk.internal.org.xml.sax.SAXException;
-import org.apache.tools.ant.util.FileUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
-import javax.swing.text.DateFormatter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by mian on 2016-12-28.
  *
+ * This class will parse an given URL, leading to an XML-document of
+ * Swedish radios channel list. It will store the information of each
+ * channel in a object of type ProgramInformation. Later on the
+ * another function, parseChannelTableau() can be called with the
+ * list of channels as parameters. This function will parse each
+ * channels program schedule and store information about each
+ * program within a 12 hour span.
+ *
+ * @version 1.0
+ * @author Michael Andersson (mian)
  */
 public class ParseSRTableau {
 
@@ -45,8 +44,13 @@ public class ParseSRTableau {
     }
 
 
+    /**
+     *
+     * @param srURL String
+     * @return List<ChannelInformation>
+     * @throws IOException
+     */
     public List<ChannelInformation> parseChannels(String srURL) throws IOException {
-
         Element rootNode;
         /* Open and parse XML-file */
         Document xmlChannels = createDOMTree(openURL(srURL).openStream());
@@ -56,44 +60,81 @@ public class ParseSRTableau {
                 ("channels").item(0));
 
         return channelInfo;
-
     }
 
+    /**
+     *
+     * @param channelInfo
+     * @throws IOException
+     */
     public void parseChannelTableau(List<ChannelInformation> channelInfo) throws IOException {
+                /* Setting upp yesterdays and tomorrows date.
+        This for retrieving the correct date for the channel tableau,*/
+        DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        String yesterday = dtf.format(cal.getTime());
+        cal.add(Calendar.DATE, +1);
+        String today = dtf.format(cal.getTime());
+        cal.add(Calendar.DATE, +1);
+        String tomorrow = dtf.format(cal.getTime());
 
-        Element rootNode;
+        String[] surroundingDates = new String[3];
+        surroundingDates[0] = "&date=" + yesterday;
+        surroundingDates[1] = "&date=" + today;
+        surroundingDates[2] = "&date=" + tomorrow;
+
+        Element scheduleRoot;
+
         /* Parse and gets information for all program
             episodes for the given channel */
         for(ChannelInformation cInfo: channelInfo){
-            if(cInfo.getSchedule() != null) {
-                System.out.println("Ny kanal...");
-                List<ProgramInformation> programInfo = new ArrayList<>();
 
-                Document programTableau = createDOMTree(openURL(
-                        cInfo.getSchedule().toString()).openStream());
-                NodeList nList = programTableau.getElementsByTagName("sr");
-                rootNode = (Element) nList.item(0);
-                parseProgram((Element) rootNode.getElementsByTagName
-                        ("schedule").item(0), programInfo);
-                cInfo.setProgramInfo(programInfo);
+            List<ProgramInformation> programInfo = new ArrayList<>();
+            //Checks the tableau for channel for the surrounding dates.
+            for(int i = 0; i < 3; i++){
+
+                if(cInfo.getSchedule() != null) {
+
+
+                    /* Adds a date and sets pagination to false before
+                    * opening the URL */
+                    Document programTableau = createDOMTree(openURL(
+                            cInfo.getSchedule() +(surroundingDates[i])
+                                    +"&pagination=false").openStream());
+                    NodeList nList = programTableau.
+                            getElementsByTagName("sr");
+
+                    scheduleRoot = (Element) nList.item(0);
+
+                    parseProgram((Element) scheduleRoot.getElementsByTagName
+                            ("schedule").item(0), programInfo);
+                }
             }
-
+            cInfo.setProgramInfo(programInfo);
         }
-
     }
 
-    private void parseProgram(Element schedule, List<ProgramInformation> programInfo){
+    /**
+     *
+     * @param schedule
+     * @param programInfo
+     */
+    private void parseProgram(Element schedule,
+                              List<ProgramInformation> programInfo){
         String title;
         String startTime;
         String endTime;
         String description;
-        String date;
+
+        Date episodeDate_Start = null;
+        Date episodeDate_End = null;
+        Date currentDate = new Date();
         URL image;
 
-        String temp;
-        String[] str;
-
-        NodeList episodeList = schedule.getElementsByTagName("scheduledepisode");
+        DateFormat formatter = new SimpleDateFormat("yy-MM-dd'T'HH:mm:ss'Z'");
+        NodeList episodeList = schedule.
+                getElementsByTagName("scheduledepisode");
 
         for(int i = 0; i < episodeList.getLength(); i++){
             Element episode = (Element) episodeList.item(i);
@@ -115,50 +156,39 @@ public class ParseSRTableau {
             } catch (NullPointerException e){
                 image = null;
             }
-            temp = episode.getElementsByTagName("starttimeutc").
+
+            startTime = episode.getElementsByTagName("starttimeutc").
                     item(0).getTextContent();
-            str = temp.split("T");
-            date = str[0];
-            str = str[1].split("Z");
-            startTime = str[0];
-
-            temp = episode.getElementsByTagName("endtimeutc").
+            endTime = episode.getElementsByTagName("endtimeutc").
                     item(0).getTextContent();
-            str = temp.split("T");
-            str = str[1].split("Z");
-            endTime = str[0];
+            try {
+                episodeDate_Start = formatter.parse(startTime);
+                episodeDate_End = formatter.parse(endTime);
 
-
-            if (checkTimeInterval(date, startTime)){
-                programInfo.add(new ProgramInformation(title,
-                        description, image, date, startTime, endTime));
+            } catch (ParseException e) {
+                System.err.println("Invalid Date format.");
             }
 
-
-
+            if (checkTimeInterval(episodeDate_Start, currentDate)){
+                programInfo.add(new ProgramInformation(title,
+                        description, image, episodeDate_Start,
+                        episodeDate_End));
+            }
         }
-
     }
 
-    private boolean checkTimeInterval(String date,
-                                    String startTime){
 
-
-
-        DateFormat formatter = new SimpleDateFormat("yy-MM-dd'T'HH:mm:ss");
-        Date episodeDate = null;
-        String strdate = date.concat("T" + startTime);
-
-
-        try {
-            episodeDate = formatter.parse(strdate);
-        } catch (ParseException e) {
-            System.err.println("Invalid Date format.");
-            return false;
-        }
+    /**
+     *
+     * @param episodeDate
+     * @param currentDate
+     * @return
+     */
+    private boolean checkTimeInterval(Date episodeDate,
+                                      Date currentDate){
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(episodeDate);
+        cal.setTime(currentDate);
 
         cal.add(Calendar.HOUR, -12);
         Date twelveHoursBefore = cal.getTime();
@@ -166,11 +196,17 @@ public class ParseSRTableau {
         cal.add(Calendar.HOUR, +24);
         Date twelveHoursAfter = cal.getTime();
 
-        return (episodeDate.after(twelveHoursBefore) &&
-                episodeDate.before(twelveHoursAfter));
-
+        if ((episodeDate.after(twelveHoursBefore) &&
+                episodeDate.before(twelveHoursAfter))){
+            return true;
+        }
+        return false;
     }
 
+    /**
+     *
+     * @param channels
+     */
     private void parseChannels(Element channels){
         NodeList channelList = channels.getElementsByTagName("channel");
         String name;
@@ -178,15 +214,8 @@ public class ParseSRTableau {
         URL image;
         URL liveAudio;
         String channelType;
-        URL schedule;
-        /* Setting upp yesterdays and tomorrows date.
-        This for retrieving the correct date for the channel tableau,*/
-        DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        String yesterday = dtf.format(cal.getTime());
-        cal.add(Calendar.DATE, +2);
-        String tomorrow = dtf.format(cal.getTime());
+        String schedule;
+
 
 
         for(int i = 0; i < channelList.getLength(); i++){
@@ -202,14 +231,9 @@ public class ParseSRTableau {
                     getElementsByTagName("url").item(0).getTextContent());
 
             /* Some channels don't have an URL to their schedule. */
-
             try {
-                String scheduleUrl =channel.getElementsByTagName
+                schedule = channel.getElementsByTagName
                         ("scheduleurl").item(0).getTextContent();
-                schedule = openURL(scheduleUrl + "&fromdate=" +
-                        yesterday + "&todate=" + tomorrow
-                        + "&pagination=false");
-                System.out.println(schedule);
             }catch (NullPointerException e){
                 schedule = null;
             }
