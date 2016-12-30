@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by mian on 2016-12-28.
  */
-public class ChannelInformation {
+public class ChannelInformation{
 
     private String name;
     private int id;

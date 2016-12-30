@@ -78,8 +78,6 @@ class ParseSRTableauTest {
         println (channelInfo.get(0).getProgramInfo().size());
 
         for(ProgramInformation pinfo: channelInfo.get(0).getProgramInfo()){
-            println pinfo.getTitle();
-            println pinfo.getEpisodeDate_Start()
         }
     }
 
@@ -87,7 +85,7 @@ class ParseSRTableauTest {
     void testParseTestToReadFromSRUrl() throws IOException{
         ParseSRTableau parseSR = new ParseSRTableau();
         List<ChannelInformation> channelInfo;
-        channelInfo = parseSR.parseChannels("http://api.sr.se/api/v2/channels");
+        channelInfo = parseSR.parseChannels("http://api.sr.se/api/v2/channels?pagination=false");
 
         parseSR.parseChannelTableau(channelInfo);
 

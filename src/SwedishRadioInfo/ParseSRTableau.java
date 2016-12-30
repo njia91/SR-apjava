@@ -230,17 +230,20 @@ public class ParseSRTableau {
             liveAudio = openURL(audioElement.
                     getElementsByTagName("url").item(0).getTextContent());
 
-            /* Some channels don't have an URL to their schedule. */
-            try {
-                schedule = channel.getElementsByTagName
-                        ("scheduleurl").item(0).getTextContent();
-            }catch (NullPointerException e){
-                schedule = null;
-            }
+
+
 
             channelType = channel.getElementsByTagName
                     ("channeltype").item(0).getTextContent();
 
+             /* Some channels don't have an URL to their schedule. */
+            try {
+                schedule = channel.getElementsByTagName
+                        ("scheduleurl").item(0).getTextContent();
+
+            }catch (NullPointerException e){
+                schedule = null;
+            }
             channelInfo.add(new ChannelInformation(name, id, image,
                     liveAudio, channelType, schedule));
 
