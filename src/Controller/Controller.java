@@ -1,7 +1,9 @@
 package Controller;
 
+import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.ProgramInformation;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ public interface Controller {
     void updateChannelInformation();
 
 
-    List<ProgramInformation> getChannelTableau(String name);
+    ChannelInformation getChannelInfo(String name);
 
     Map<String, ArrayList<String>> getCategories();
 

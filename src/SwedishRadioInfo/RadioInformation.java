@@ -13,7 +13,7 @@ public interface RadioInformation {
 
     String update();
 
-    List<ProgramInformation> retrieveChannelTableau(String name);
+    ChannelInformation retrieveChannelInfo(String name);
 
     Map<String, ArrayList<String>> getChannelByCategory();
 

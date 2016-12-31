@@ -1,6 +1,7 @@
 package Controller;
 
 import GUI.SwedishRadioGUI;
+import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.SwedishRadio;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class GUIEventManager implements EventController {
     }
 
     public void showChannelTableau(String name){
-
+        ChannelInformation cInfo = sr.getChannelInfo(name);
+        gui.loadProgamTableau(cInfo.getImage());
     }
 
 

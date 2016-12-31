@@ -1,9 +1,6 @@
 import Controller.GUIEventManager;
 import Controller.SwedishRadioController;
-import GUI.Alternativ;
-import GUI.Kanaler;
-import GUI.StartScreen;
-import GUI.SwedishRadioGUI;
+import GUI.*;
 
 import SwedishRadioInfo.SwedishRadio;
 
@@ -18,11 +15,12 @@ public class SRMain {
     public static void main(String[] args) {
 
         StartScreen startScreen = new StartScreen();
+        ProgramTableau programTableau = new ProgramTableau();
 
         SwedishRadio sr = new SwedishRadio(
                 "http://api.sr.se/api/v2/channels?pagination=false");
         SwedishRadioController srCtrl = new SwedishRadioController(sr);
-        SwedishRadioGUI gui = new SwedishRadioGUI(startScreen);
+        SwedishRadioGUI gui = new SwedishRadioGUI(startScreen, programTableau);
 
         GUIEventManager eventManager = new GUIEventManager(srCtrl, gui);
 

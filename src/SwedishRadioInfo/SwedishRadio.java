@@ -37,18 +37,16 @@ public class SwedishRadio implements RadioInformation {
 
     }
 
-    public List<ProgramInformation> retrieveChannelTableau(String name)
+    public ChannelInformation retrieveChannelInfo(String name)
             throws IllegalArgumentException{
         for(ChannelInformation cInfo: channelInfo){
             if(cInfo.getName().equals(name)){
-                return cInfo.getProgramInfo();
+                return cInfo;
             }
         }
-
         throw new IllegalArgumentException("Invalid channel name");
 
     }
-
 
     public Map<String, ArrayList<String>> getChannelByCategory() {
         return channelByCategory;

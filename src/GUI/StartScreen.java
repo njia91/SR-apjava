@@ -30,14 +30,15 @@ public class StartScreen extends JPanel{
             System.exit(1);
         }
 
+        /* Making sure that the image is in the center. */
         JLabel piclabel = new JLabel();
         piclabel.setSize(this.getPreferredSize());
-        this.add(piclabel, BorderLayout.CENTER);
         Image scaledImg = img.getScaledInstance(piclabel.getWidth(),
                 piclabel.getHeight(),Image.SCALE_SMOOTH);
         piclabel.setIcon(new ImageIcon(scaledImg));
         piclabel.setHorizontalAlignment(JLabel.CENTER);
         piclabel.setVerticalAlignment(JLabel.CENTER);
 
+        this.add(piclabel, BorderLayout.CENTER);
     }
 }
