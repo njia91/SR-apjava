@@ -2,9 +2,11 @@ package GUI;
 
 
 import Controller.GUIEventManager;
-import org.apache.ivy.core.event.EventManager;
+//import org.apache.ivy.core.event.EventManager;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,23 @@ public class Kanaler extends JMenu{
     public Kanaler(GUIEventManager eventManager){
         super("Kanaler");
         this.eventManager = eventManager;
-        updateChannels();
+        this.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                updateChannels();
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+                Kanaler menu = (Kanaler)e.getSource();
+                menu.removeAll();
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+
+            }
+        });
 
     }
 
