@@ -71,7 +71,8 @@ public class SwedishRadio implements RadioInformation {
             }
         }
 
-        for(Map.Entry<String, ArrayList<String>> pair: channelByCategory.entrySet()){
+        for(Map.Entry<String, ArrayList<String>> pair:
+                channelByCategory.entrySet()){
             Collections.sort(pair.getValue());
         }
     }
