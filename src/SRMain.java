@@ -16,11 +16,14 @@ public class SRMain {
 
         StartScreen startScreen = new StartScreen();
         ProgramTableau programTableau = new ProgramTableau();
+        ProgramDescription programSpecifics = new ProgramDescription();
+
 
         SwedishRadio sr = new SwedishRadio(
                 "http://api.sr.se/api/v2/channels?pagination=false");
         SwedishRadioController srCtrl = new SwedishRadioController(sr);
-        SwedishRadioGUI gui = new SwedishRadioGUI(startScreen, programTableau);
+        SwedishRadioGUI gui = new SwedishRadioGUI(startScreen,
+                programTableau, programSpecifics);
 
         GUIEventManager eventManager = new GUIEventManager(srCtrl, gui);
 

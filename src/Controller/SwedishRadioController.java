@@ -6,6 +6,7 @@ import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.ProgramInformation;
 import SwedishRadioInfo.SwedishRadio;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class SwedishRadioController implements Controller{
      * @param name
      * @return
      */
-    public synchronized ChannelInformation getChannelInfo(String name){
+    public synchronized ChannelInformation getChannelInfo(String name)
+            throws IOException, IllegalArgumentException {
         return sr.retrieveChannelInfo(name);
     }
 

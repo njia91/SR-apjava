@@ -25,12 +25,13 @@ public class SwedishRadio implements RadioInformation {
         List<ChannelInformation> tempList;
         try {
             tempList = srParser.parseChannels(this.srURL);
-            srParser.parseChannelTableau(tempList);
         } catch (IOException e) {
             return "Could not connect to the SR API. Please" +
                     " check your internet connection.";
         }
         this.channelInfo = tempList;
+        channelInfo.sort((ChannelInformation c1, ChannelInformation c2)
+                -> c1.getName().compareTo(c2.getName()));
         sortChannelsByCategory();
         return "Successfully updated SR Channel Tableau.";
 
@@ -38,9 +39,12 @@ public class SwedishRadio implements RadioInformation {
     }
 
     public ChannelInformation retrieveChannelInfo(String name)
-            throws IllegalArgumentException{
+            throws IllegalArgumentException, IOException {
         for(ChannelInformation cInfo: channelInfo){
             if(cInfo.getName().equals(name)){
+                srParser.parseChannelTableau(cInfo);
+                cInfo.getProgramInfo().sort((ProgramInformation d1, ProgramInformation d2)
+                        -> d1.getEpisodeDate_Start().compareTo(d2.getEpisodeDate_Start()));
                 return cInfo;
             }
         }

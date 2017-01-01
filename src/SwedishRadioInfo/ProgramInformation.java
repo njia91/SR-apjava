@@ -11,7 +11,6 @@ import java.util.Date;
 public class ProgramInformation {
 
     private String title;
-    private int id;
     private String description;
     private URL image;
     private Date episodeDate_Start;
@@ -21,7 +20,7 @@ public class ProgramInformation {
 
     public ProgramInformation(String title, String description,
                               URL image, Date episodeDate_Start,
-                              Date episodeDate_End) {
+                              Date episodeDate_End ) {
         this.title = title;
         this.description = description;
         this.image = image;
@@ -43,9 +42,6 @@ public class ProgramInformation {
     }
 
 
-    public int getId() {
-        return id;
-    }
 
     public Date getEpisodeDate_Start() {
         return episodeDate_Start;

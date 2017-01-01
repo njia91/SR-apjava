@@ -3,6 +3,7 @@ package Controller;
 import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.ProgramInformation;
 
+import java.io.IOException;
 import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ public interface Controller {
     void updateChannelInformation();
 
 
-    ChannelInformation getChannelInfo(String name);
+     ChannelInformation getChannelInfo(String name)
+            throws IOException, IllegalArgumentException;
 
     Map<String, ArrayList<String>> getCategories();
 

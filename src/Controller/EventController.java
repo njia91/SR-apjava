@@ -17,5 +17,6 @@ public interface EventController {
     Map<String, ArrayList<String>> getChannelNames();
 
 
+    void showProgramInfo(String name);
 
 }

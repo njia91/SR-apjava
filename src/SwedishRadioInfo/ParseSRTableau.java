@@ -44,6 +44,7 @@ public class ParseSRTableau {
     }
 
 
+
     /**
      *
      * @param srURL String
@@ -64,10 +65,10 @@ public class ParseSRTableau {
 
     /**
      *
-     * @param channelInfo
+     * @param cInfo
      * @throws IOException
      */
-    public void parseChannelTableau(List<ChannelInformation> channelInfo) throws IOException {
+    public void parseChannelTableau(ChannelInformation cInfo) throws IOException {
                 /* Setting upp yesterdays and tomorrows date.
         This for retrieving the correct date for the channel tableau,*/
         DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
@@ -88,38 +89,35 @@ public class ParseSRTableau {
 
         /* Parse and gets information for all program
             episodes for the given channel */
-        for(ChannelInformation cInfo: channelInfo){
-
-            List<ProgramInformation> programInfo = new ArrayList<>();
-            //Checks the tableau for channel for the surrounding dates.
-            for(int i = 0; i < 3; i++){
-
-                if(cInfo.getSchedule() != null) {
 
 
-                    /* Adds a date and sets pagination to false before
-                    * opening the URL */
-                    Document programTableau = createDOMTree(openURL(
+        List<ProgramInformation> programInfo = new ArrayList<>();
+        //Checks the tableau for channel for the surrounding dates.
+        for(int i = 0; i < 3; i++){
+
+            if(cInfo.getSchedule() != null) {
+
+
+                /* Adds a date and sets pagination to false before
+                   * opening the URL */
+                Document programTableau = createDOMTree(openURL(
                             cInfo.getSchedule() +(surroundingDates[i])
                                     +"&pagination=false").openStream());
-                    NodeList nList = programTableau.
-                            getElementsByTagName("sr");
+                NodeList nList = programTableau.
+                        getElementsByTagName("sr");
 
-                    scheduleRoot = (Element) nList.item(0);
+                scheduleRoot = (Element) nList.item(0);
 
-                    parseProgram((Element) scheduleRoot.getElementsByTagName
-                            ("schedule").item(0), programInfo);
-                }
+                parseProgram((Element) scheduleRoot.getElementsByTagName
+                        ("schedule").item(0), programInfo);
             }
-            cInfo.setProgramInfo(programInfo);
         }
+        cInfo.setProgramInfo(programInfo);
+
     }
 
-    /**
-     *
-     * @param schedule
-     * @param programInfo
-     */
+
+
     private void parseProgram(Element schedule,
                               List<ProgramInformation> programInfo){
         String title;
@@ -141,6 +139,7 @@ public class ParseSRTableau {
 
             title = episode.getElementsByTagName
                     ("title").item(0).getTextContent();
+
             try {
                 description = episode.getElementsByTagName
                         ("description").item(0).getTextContent();
@@ -215,8 +214,6 @@ public class ParseSRTableau {
         URL liveAudio;
         String channelType;
         String schedule;
-
-
 
         for(int i = 0; i < channelList.getLength(); i++){
             Element channel = (Element) channelList.item(i);
