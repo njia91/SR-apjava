@@ -44,13 +44,16 @@ public class GUIEventManager implements EventController {
         SwingUtilities.invokeLater(() ->gui.loadLoadingScreen());
 
         scheduledPool.submit(() -> {
-            sr.updateChannelInformation();
+            String message = sr.updateChannelInformation();
             try {
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException ignored){
 
             }
-            SwingUtilities.invokeLater(() -> gui.loadStartScreen());
+            SwingUtilities.invokeLater(() -> {
+                gui.loadStartScreen();
+                gui.setStatusBarText(message);
+            });
         });
 
         System.out.println("I EventMaanger");

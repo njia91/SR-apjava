@@ -34,23 +34,12 @@ public class TableauPanel extends JPanel {
 
 
     public void setImage(URL imageURL){
+        URLImageLoader loader = new URLImageLoader();
+        BufferedImage img =  loader.openURLImage(imageURL);
 
-        BufferedImage img= null;
-        /* This is ugly, but if internet connection fails,
-        *  try to load local image.*/
-        try {
-            img = ImageIO.read( imageURL);
-        } catch (IOException | IllegalArgumentException e){
-            try {
-                img = ImageIO.read(new File("images/Bild_saknas.svg.png"));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return;
-            }
-        }
         picLabel.setSize(this.getPreferredSize());
-        Image scaledImg = img.getScaledInstance(picLabel.getWidth(),
-                picLabel.getHeight() / 3, Image.SCALE_SMOOTH);
+        Image scaledImg = img.getScaledInstance(picLabel.getWidth()/2,
+                picLabel.getHeight() / 2, Image.SCALE_SMOOTH);
         picLabel.setIcon(new ImageIcon(scaledImg));
         picLabel.setHorizontalAlignment(JLabel.CENTER);
         picLabel.setVerticalAlignment(JLabel.CENTER);

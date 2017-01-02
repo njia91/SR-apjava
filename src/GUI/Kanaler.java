@@ -25,6 +25,7 @@ public class Kanaler extends JMenu{
         this.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
+
                 updateChannels();
             }
 
@@ -36,7 +37,8 @@ public class Kanaler extends JMenu{
 
             @Override
             public void menuCanceled(MenuEvent e) {
-
+                Kanaler menu = (Kanaler)e.getSource();
+                menu.removeAll();
             }
         });
 
@@ -46,6 +48,7 @@ public class Kanaler extends JMenu{
     private void updateChannels(){
         Map <String, ArrayList<String>> categoryMap =
                 eventManager.getChannelNames();
+        System.out.println(categoryMap.size());
         /* Creates a new Menu for each category and creates
         *  JMenuItems for each channel under that category. */
         for(Map.Entry<String, ArrayList<String>> entry :

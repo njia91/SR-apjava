@@ -31,14 +31,14 @@ public class StartScreen extends JPanel{
         }
 
         /* Making sure that the image is in the center. */
-        JLabel piclabel = new JLabel();
-        piclabel.setSize(this.getPreferredSize());
-        Image scaledImg = img.getScaledInstance(piclabel.getWidth(),
-                piclabel.getHeight(),Image.SCALE_SMOOTH);
-        piclabel.setIcon(new ImageIcon(scaledImg));
-        piclabel.setHorizontalAlignment(JLabel.CENTER);
-        piclabel.setVerticalAlignment(JLabel.CENTER);
+        JLabel picLabel = new JLabel();
+        picLabel.setSize(this.getPreferredSize());
+        Image scaledImg = img.getScaledInstance(picLabel.getWidth(),
+                picLabel.getHeight(),Image.SCALE_SMOOTH);
+        picLabel.setIcon(new ImageIcon(scaledImg));
+        picLabel.setHorizontalAlignment(JLabel.CENTER);
+        picLabel.setVerticalAlignment(JLabel.CENTER);
 
-        this.add(piclabel, BorderLayout.CENTER);
+        this.add(picLabel, BorderLayout.CENTER);
     }
 }

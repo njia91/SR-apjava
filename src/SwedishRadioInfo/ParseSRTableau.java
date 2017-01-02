@@ -39,8 +39,6 @@ public class ParseSRTableau {
     public ParseSRTableau() {
 
         channelInfo = new ArrayList<>();
-
-
     }
 
 

@@ -43,7 +43,6 @@ public class ProgramTable extends JTable{
         Date startDate = dateFormat.formatToDate(start);
         Date endDate = dateFormat.formatToDate(end);
 
-        System.out.println(startDate.toString());
         if(currentDate.after(startDate) && currentDate.before(endDate)){
            c.setBackground(Color.GREEN);
         }else if (currentDate.before(startDate)){

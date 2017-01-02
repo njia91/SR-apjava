@@ -4,6 +4,9 @@ import SwedishRadioInfo.ProgramInformation;
 //import org.apache.ivy.core.event.EventManager;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -20,6 +23,7 @@ public class SwedishRadioGUI extends JFrame{
     private CardLayout layout;
     private ProgramDescription programDescription;
     private LoadingScreen loadingScreen;
+    private JLabel status;
 
     private static String START = "1";
     private static String PROGRAM = "2";
@@ -42,11 +46,13 @@ public class SwedishRadioGUI extends JFrame{
         this.startScreen.setPreferredSize(this.getPreferredSize());
         this.programTableau.setPreferredSize(this.getPreferredSize());
         this.loadingScreen.setPreferredSize(this.getPreferredSize());
+        setUpStatusBar();
 
         setUpCardLayout();
         layout.show(panelCont, START);
         super.pack();
         this.setLocationRelativeTo(null);
+        status.setText("Använd menyn i högra hörnet för att välja kanal.");
     }
 
 
@@ -85,7 +91,26 @@ public class SwedishRadioGUI extends JFrame{
     }
 
     public void loadStartScreen(){
+        this.
         layout.show(panelCont, START);
+
     }
+
+
+    public void setStatusBarText(String message){
+        status.setText(message);
+    }
+
+    private void setUpStatusBar(){
+        JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        statusBar.setBorder(new CompoundBorder(
+                new LineBorder(Color.DARK_GRAY),
+                new EmptyBorder(4,4,4,4)));
+        status = new JLabel();
+        statusBar.add(status);
+        this.getContentPane().add(statusBar, BorderLayout.SOUTH);
+    }
+
+
 
 }

@@ -15,26 +15,26 @@ public class SwedishRadio implements RadioInformation {
     private Map<String, ArrayList<String>> channelByCategory;
 
     public SwedishRadio(String srURL){
-        srParser = new ParseSRTableau();
         this.srURL = srURL;
         update();
 
     }
 
     public String update(){
+        System.out.println(Thread.currentThread());
         List<ChannelInformation> tempList;
-
+        srParser = new ParseSRTableau();
         try {
             tempList = srParser.parseChannels(this.srURL);
         } catch (IOException e) {
-            return "Could not connect to the SR API. Please" +
-                    " check your internet connection.";
+            return "Något fel: Kunde ej uppdatera kanal tablån. "
+                    + "Se över din internetanslutning.";
         }
         this.channelInfo = tempList;
         channelInfo.sort((ChannelInformation c1, ChannelInformation c2)
                 -> c1.getName().compareTo(c2.getName()));
         sortChannelsByCategory();
-        return "Successfully updated SR Channel Tableau.";
+        return "Framgång: Kanaltablån är nu uppdaterad.";
 
 
     }

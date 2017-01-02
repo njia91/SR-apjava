@@ -75,18 +75,10 @@ public class ProgramDescription extends JPanel{
     }
 
     private void setupProgramImage(URL imageURL){
-        BufferedImage img = null;
+        URLImageLoader loader = new URLImageLoader();
+        BufferedImage img = loader.openURLImage(imageURL);
 
-        try {
-            img = ImageIO.read( imageURL);
-        } catch (IOException | IllegalArgumentException e){
-            try {
-                img = ImageIO.read(new File("images/Bild_saknas.svg.png"));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return;
-            }
-        }
+
 
         picLabel.setSize(this.getPreferredSize());
         Image scaledImg = img.getScaledInstance(picLabel.getWidth()/3,
