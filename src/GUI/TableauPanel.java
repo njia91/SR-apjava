@@ -15,12 +15,12 @@ import java.net.URL;
 /**
  * @author Michael Andersson
  */
-public class ProgramTableau extends JPanel {
+public class TableauPanel extends JPanel {
 
     private JLabel picLabel;
     private JTable tableauTable;
 
-    public ProgramTableau(){
+    public TableauPanel(){
         super();
         this.setPreferredSize(new Dimension(600,600));
         this.setLayout(new BorderLayout());

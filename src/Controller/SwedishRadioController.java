@@ -1,14 +1,11 @@
 package Controller;
 
 
-import GUI.ProgramTableau;
 import SwedishRadioInfo.ChannelInformation;
-import SwedishRadioInfo.ProgramInformation;
 import SwedishRadioInfo.SwedishRadio;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,8 +26,8 @@ public class SwedishRadioController implements Controller{
     /**
      *
      */
-    public synchronized void updateChannelInformation(){
-        sr.update();
+    public synchronized String updateChannelInformation(){
+        return sr.update();
     }
 
     /**

@@ -1,5 +1,7 @@
 package Controller;
 
+import SwedishRadioInfo.ProgramInformation;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,6 +19,6 @@ public interface EventController {
     Map<String, ArrayList<String>> getChannelNames();
 
 
-    void showProgramInfo(String name);
+    void showProgramInfo(ProgramInformation pInfo);
 
 }

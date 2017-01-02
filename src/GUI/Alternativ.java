@@ -1,5 +1,6 @@
 package GUI;
 
+import Controller.EventController;
 import Controller.GUIEventManager;
 
 import javax.swing.*;
@@ -9,7 +10,7 @@ import javax.swing.*;
  */
 public class Alternativ extends JMenu {
 
-    private GUIEventManager eventManager;
+    private EventController eventManager;
 
     public Alternativ(GUIEventManager eventManager){
         super("Alternativ");
@@ -31,6 +32,7 @@ public class Alternativ extends JMenu {
 
     private void createUppdatera(){
         JMenuItem uppdatera = new JMenuItem("Uppdatera");
+        uppdatera.addActionListener(e -> eventManager.update());
         super.add(uppdatera);
     }
 }

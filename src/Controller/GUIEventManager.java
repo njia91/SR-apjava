@@ -5,7 +5,6 @@ import GUI.ProgramRenderer;
 import GUI.SwedishRadioGUI;
 import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.ProgramInformation;
-import SwedishRadioInfo.SwedishRadio;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +12,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michael Andersson
@@ -23,6 +27,7 @@ public class GUIEventManager implements EventController {
     private SwedishRadioGUI gui;
     private ProgramRenderer programRenderer;
     private ChannelInformation currentChannel;
+    private ScheduledExecutorService scheduledPool;
 
 
     public GUIEventManager(SwedishRadioController sr,
@@ -30,9 +35,26 @@ public class GUIEventManager implements EventController {
         this.sr = sr;
         this.gui = gui;
         programRenderer = new ProgramRenderer(this);
+        this.scheduledPool = Executors.newScheduledThreadPool(2);
+        setupAutomaticUpdateThread();
     }
 
     public void update(){
+
+        SwingUtilities.invokeLater(() ->gui.loadLoadingScreen());
+
+        scheduledPool.submit(() -> {
+            sr.updateChannelInformation();
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException ignored){
+
+            }
+            SwingUtilities.invokeLater(() -> gui.loadStartScreen());
+        });
+
+        System.out.println("I EventMaanger");
+
 
     }
 
@@ -51,18 +73,10 @@ public class GUIEventManager implements EventController {
 
 
 
-    public void showProgramInfo(String name){
-        System.out.println("SKRIVER UT!");
-        System.out.println(name);
-        for(ProgramInformation pInfo : currentChannel.getProgramInfo()){
-            System.out.println(name);
-            if (pInfo.getTitle().equals(name)){
+    public void showProgramInfo(ProgramInformation pInfo){
+        gui.loadProgramDescription(pInfo, createGoBackButtonListener());
+        return;
 
-                gui.loadProgramDescription(pInfo,
-                        createGoBackButtonListener());
-                return;
-            }
-        }
 
     }
 
@@ -76,7 +90,19 @@ public class GUIEventManager implements EventController {
     }
 
 
+    private void setupAutomaticUpdateThread(){
+        scheduledPool.schedule(() -> {
+            update();
+            setupAutomaticUpdateThread();
+        },
+                1, TimeUnit.HOURS);
+    }
 
+
+
+    public void shutDownThreadPool(){
+        scheduledPool.shutdown();
+    }
 
 
 }

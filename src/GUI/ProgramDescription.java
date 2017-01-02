@@ -18,23 +18,48 @@ import java.net.URL;
 public class ProgramDescription extends JPanel{
 
 
-    JPanel uppPanel = new JPanel();
-    JPanel middle = new JPanel();
-
+    private JPanel uppPanel = new JPanel();
+    private JPanel middle = new JPanel();
+    private JPanel infoPanel = new JPanel();
     private JLabel picLabel;
-
-    private JTextArea description;
+    private JLabel description;
+    private JLabel startDate;
+    private JLabel endDate;
+    private JLabel title;
+    private SpecificDateFormat dateFormat;
+    private JButton returnToTableau;
 
 
     public ProgramDescription(){
         super();
         this.setLayout(new BorderLayout());
-
+        this.uppPanel = new JPanel();
+        this.middle = new JPanel();
+        this.infoPanel = new JPanel();
         this.setPreferredSize(new Dimension(600, 600));
         this.add(uppPanel, BorderLayout.NORTH);
         this.add(middle, BorderLayout.SOUTH);
+        this.infoPanel = new JPanel();
+        this.infoPanel.setLayout(new BoxLayout(infoPanel,
+                BoxLayout.Y_AXIS));
+        uppPanel.add(infoPanel, BorderLayout.EAST);
         this.picLabel = new JLabel();
-        this.description = new JTextArea();
+        this.description = new JLabel();
+        this.startDate = new JLabel();
+        this.endDate = new JLabel();
+        this.title = new JLabel();
+        this.returnToTableau = new JButton("Gå tillbaka till kanaltablån.");
+        returnToTableau.setPreferredSize(new Dimension(400,50));
+        dateFormat = new SpecificDateFormat();
+        Dimension space = new Dimension(0, 20);
+        infoPanel.add(title);
+        infoPanel.add(Box.createRigidArea(space));
+        infoPanel.add(description);
+        infoPanel.add(Box.createRigidArea(space));
+        infoPanel.add(startDate);
+        infoPanel.add(endDate);
+        uppPanel.add(picLabel, BorderLayout.WEST);
+
 
     }
 
@@ -45,8 +70,8 @@ public class ProgramDescription extends JPanel{
 
         setupProgramImage(pInfo.getImage());
         setupProgramDescription(pInfo);
+        setupReturnButton(listener);
         this.revalidate();
-        uppPanel.revalidate();
     }
 
     private void setupProgramImage(URL imageURL){
@@ -69,31 +94,31 @@ public class ProgramDescription extends JPanel{
         picLabel.setIcon(new ImageIcon(scaledImg));
         picLabel.setHorizontalAlignment(JLabel.CENTER);
         picLabel.setVerticalAlignment(JLabel.CENTER);
-
         uppPanel.add(picLabel, BorderLayout.WEST);
-        picLabel.revalidate();
-
     }
 
 
     private void setupProgramDescription(ProgramInformation pInfo){
 
+        Dimension dimension = new Dimension(290, 70);
+        Dimension space = new Dimension(0, 20);
         SpecificDateFormat dateFormat = new SpecificDateFormat();
-        description.setPreferredSize(new Dimension(300,200));
-        description.setCaretColor(this.getBackground());
-        description.append(pInfo.getTitle());
-        description.append("\n");
-        description.append(pInfo.getDescription());
-        description.append("\n");
-        description.append("\n");
-        description.append("Slutar: " +
-                dateFormat.formatToString(pInfo.getEpisodeDate_End()));
-        description.append("\n");
-        description.append("Startar: " +
-                dateFormat.formatToString(pInfo.getEpisodeDate_End()));
 
-        description.setVisible(true);
-        middle.add(description, BorderLayout.CENTER);
+        title.setText("<html>" + pInfo.getTitle() + "<html>");
+        title.setPreferredSize(dimension);
+        description.setText("<html>" +pInfo.getDescription()+ "</html>");
+        description.setPreferredSize(dimension);
+        startDate.setText("Startar: " + dateFormat.getTimeAndDayFromDate(
+                pInfo.getEpisodeDate_Start()));
+        endDate.setText("Slutar: " + dateFormat.getTimeAndDayFromDate(
+                pInfo.getEpisodeDate_End()));
+    }
+
+
+    private void setupReturnButton(ActionListener listener){
+        returnToTableau.addActionListener(listener);
+        middle.add(returnToTableau, BorderLayout.CENTER);
+
     }
 
 }

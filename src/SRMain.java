@@ -15,15 +15,16 @@ public class SRMain {
     public static void main(String[] args) {
 
         StartScreen startScreen = new StartScreen();
-        ProgramTableau programTableau = new ProgramTableau();
+        TableauPanel programTableau = new TableauPanel();
         ProgramDescription programSpecifics = new ProgramDescription();
+        LoadingScreen loadingScreen = new LoadingScreen();
 
 
         SwedishRadio sr = new SwedishRadio(
                 "http://api.sr.se/api/v2/channels?pagination=false");
         SwedishRadioController srCtrl = new SwedishRadioController(sr);
         SwedishRadioGUI gui = new SwedishRadioGUI(startScreen,
-                programTableau, programSpecifics);
+                programTableau, programSpecifics, loadingScreen);
 
         GUIEventManager eventManager = new GUIEventManager(srCtrl, gui);
 
@@ -36,9 +37,10 @@ public class SRMain {
 
 
         try {
-            SwingUtilities.invokeAndWait(() ->
-                    gui.setVisible(true)
-            );
+            SwingUtilities.invokeAndWait(() ->{
+                    gui.setVisible(true);
+                    System.out.println("Avslutar");
+        });
         } catch (InterruptedException | InvocationTargetException e) {
             e.printStackTrace();
         }

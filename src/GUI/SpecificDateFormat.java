@@ -12,11 +12,12 @@ import java.util.Locale;
 public class SpecificDateFormat {
 
     private DateFormat dateFormat;
+    private DateFormat timeAndDay;
 
     public SpecificDateFormat(){
-        this.dateFormat = new SimpleDateFormat("yyyy MMMM, EEEE hh:mm",
-                Locale.ENGLISH);
-
+        this.dateFormat = new SimpleDateFormat("yyyy MMMM, EEEE HH:mm",
+                new Locale("Swedish", "Sweden"));
+        this.timeAndDay = new SimpleDateFormat("EEEE hh:mm");
     }
 
     public String formatToString(Date d){
@@ -32,6 +33,10 @@ public class SpecificDateFormat {
             System.exit(1);
         }
         return null;
+    }
+
+    public String getTimeAndDayFromDate(Date d){
+        return timeAndDay.format(d);
     }
 
 

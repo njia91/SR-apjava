@@ -68,9 +68,7 @@ public class ChannelLibrary extends AbstractTableModel{
 
         switch( column ){
             case 0:
-                final JButton b = new JButton(program.getTitle());
-                b.setBorder(new BevelBorder(BevelBorder.RAISED));
-                return b;
+                return program;
             case 1:
                 return dateFormat.formatToString(
                         program.getEpisodeDate_Start());

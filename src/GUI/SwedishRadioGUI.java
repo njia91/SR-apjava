@@ -16,17 +16,20 @@ public class SwedishRadioGUI extends JFrame{
 
     private JPanel panelCont;
     private StartScreen startScreen;
-    private ProgramTableau programTableau;
+    private TableauPanel programTableau;
     private CardLayout layout;
     private ProgramDescription programDescription;
+    private LoadingScreen loadingScreen;
 
     private static String START = "1";
     private static String PROGRAM = "2";
     private static String PROGRAMDESCRIPTION = "3";
+    private static String LOADING = "4";
 
     public SwedishRadioGUI(StartScreen startScreen,
-                           ProgramTableau programTableau,
-                           ProgramDescription programSpecifics){
+                           TableauPanel programTableau,
+                           ProgramDescription programSpecifics,
+                           LoadingScreen loadingScreen){
 
         super("Sveriges Radio");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,8 +38,11 @@ public class SwedishRadioGUI extends JFrame{
         this.startScreen = startScreen;
         this.programTableau = programTableau;
         this.programDescription = programSpecifics;
+        this.loadingScreen = loadingScreen;
         this.startScreen.setPreferredSize(this.getPreferredSize());
         this.programTableau.setPreferredSize(this.getPreferredSize());
+        this.loadingScreen.setPreferredSize(this.getPreferredSize());
+
         setUpCardLayout();
         layout.show(panelCont, START);
         super.pack();
@@ -51,6 +57,7 @@ public class SwedishRadioGUI extends JFrame{
         panelCont.add(startScreen, START);
         panelCont.add(programTableau, PROGRAM);
         panelCont.add(programDescription, PROGRAMDESCRIPTION);
+        panelCont.add(loadingScreen, LOADING);
         this.add(panelCont);
     }
 
@@ -63,9 +70,7 @@ public class SwedishRadioGUI extends JFrame{
 
     public void loadProgramDescription(ProgramInformation pInfo,
                                        ActionListener listener){
-
         programDescription.setUpProgramInfo(pInfo, listener);
-        System.out.println("ASdasdasdasd");
         layout.show(panelCont, PROGRAMDESCRIPTION);
 
 
@@ -73,6 +78,14 @@ public class SwedishRadioGUI extends JFrame{
 
     public void returnToChannelTableau() {
         layout.show(panelCont, PROGRAM);
+    }
+
+    public void loadLoadingScreen(){
+        layout.show(panelCont, LOADING);
+    }
+
+    public void loadStartScreen(){
+        layout.show(panelCont, START);
     }
 
 }

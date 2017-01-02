@@ -36,16 +36,15 @@ public class ProgramRenderer implements TableCellRenderer{
                                                    boolean isSelected,
                                                    boolean hasFocus,
                                                    int row, int column){
-        JButton button = (JButton)value;
+
+        ProgramInformation program = (ProgramInformation)value;
+        final JButton button = new JButton(program.getTitle());
+        button.setBorder(new BevelBorder(BevelBorder.RAISED));
         if (isSelected) {
-            button.setForeground(table.getSelectionForeground());
-            button.setBackground(table.getSelectionBackground());
-            System.out.println(button.getName());
-            eventCtrl.showProgramInfo(button.getText());
-        } else {
-            button.setForeground(table.getForeground());
-            button.setBackground(UIManager.getColor("Button.background"));
+            table.clearSelection();
+            eventCtrl.showProgramInfo(program);
         }
+
         return button;
     }
 

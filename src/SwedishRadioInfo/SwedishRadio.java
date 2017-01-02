@@ -23,6 +23,7 @@ public class SwedishRadio implements RadioInformation {
 
     public String update(){
         List<ChannelInformation> tempList;
+
         try {
             tempList = srParser.parseChannels(this.srURL);
         } catch (IOException e) {

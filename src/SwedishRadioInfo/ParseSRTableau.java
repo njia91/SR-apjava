@@ -84,7 +84,7 @@ public class ParseSRTableau {
         surroundingDates[0] = "&date=" + yesterday;
         surroundingDates[1] = "&date=" + today;
         surroundingDates[2] = "&date=" + tomorrow;
-
+        System.out.println(today);
         Element scheduleRoot;
 
         /* Parse and gets information for all program
@@ -166,6 +166,7 @@ public class ParseSRTableau {
 
             } catch (ParseException e) {
                 System.err.println("Invalid Date format.");
+                System.exit(1);
             }
 
             if (checkTimeInterval(episodeDate_Start, currentDate)){

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface Controller {
 
-    void updateChannelInformation();
+    String updateChannelInformation();
 
 
      ChannelInformation getChannelInfo(String name)
