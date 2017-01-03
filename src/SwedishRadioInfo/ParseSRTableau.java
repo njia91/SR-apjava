@@ -188,10 +188,10 @@ public class ParseSRTableau {
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentDate);
 
-        cal.add(Calendar.HOUR, -12);
+        cal.add(Calendar.HOUR_OF_DAY, -12);
         Date twelveHoursBefore = cal.getTime();
 
-        cal.add(Calendar.HOUR, +24);
+        cal.add(Calendar.HOUR_OF_DAY, +24);
         Date twelveHoursAfter = cal.getTime();
 
         if ((episodeDate.after(twelveHoursBefore) &&

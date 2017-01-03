@@ -1,6 +1,5 @@
 package GUI;
 
-import groovyx.gpars.extra166y.Ops;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
