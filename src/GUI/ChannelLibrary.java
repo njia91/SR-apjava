@@ -1,21 +1,19 @@
 package GUI;
 
-import SwedishRadioInfo.ChannelInformation;
 import SwedishRadioInfo.ProgramInformation;
-
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.table.AbstractTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Locale;
+
 
 /**
+ * This class extends AbstractTableModel.
+ * Overrides certain methods which makes it possible
+ * for a JTable to display the info.
+ *
  * @author Michael Andersson
+ * @version
  */
 
 public class ChannelLibrary extends AbstractTableModel{
@@ -24,14 +22,21 @@ public class ChannelLibrary extends AbstractTableModel{
     private int columnSize = 3;
     private SpecificDateFormat dateFormat;
 
-
+    /**
+     * Constructor for ChannelLibrary
+     * @param pInfo List of ProgramInformation.
+     */
     public ChannelLibrary(List<ProgramInformation> pInfo){
         this.pInfo = pInfo;
         dateFormat = new SpecificDateFormat();
 
     }
 
-
+    /**
+     * Gets the name of each column.
+     * @param columnIndex int
+     * @return String
+     */
     @Override
     public String getColumnName(int columnIndex){
         switch( columnIndex ){
@@ -46,21 +51,32 @@ public class ChannelLibrary extends AbstractTableModel{
         }
     }
 
-
+    /**
+     * Returns how many rows the table should contain.
+     * @return int
+     */
     @Override
     public int getRowCount(){
         return pInfo.size();
 
     }
 
-
+    /**
+     * Returns how many column the table should contain.
+     * @return int
+     */
     @Override
     public int getColumnCount(){
         return columnSize;
 
     }
 
-
+    /**
+     * Gets the value at a certain position in the table
+     * @param row int
+     * @param column int
+     * @return Object
+     */
     @Override
     public Object getValueAt(int row, int column){
 
@@ -68,7 +84,7 @@ public class ChannelLibrary extends AbstractTableModel{
 
         switch( column ){
             case 0:
-                return program;
+                return program.getTitle();
             case 1:
                 return dateFormat.formatToString(
                         program.getEpisodeDate_Start());
@@ -82,12 +98,17 @@ public class ChannelLibrary extends AbstractTableModel{
 
     }
 
+    /**
+     * Returns type of class in a column.
+     * @param column int
+     * @return Class<?>
+     */
     @Override
     public Class<?> getColumnClass(int column){
 
         switch( column ){
             case 0:
-                return JButton.class;
+                return String.class;
             case 1:
                 return String.class;
             case 2:

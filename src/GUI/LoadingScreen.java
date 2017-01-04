@@ -1,26 +1,27 @@
 package GUI;
 
-import kotlin.reflect.jvm.internal.impl.descriptors.EffectiveVisibility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.time.LocalDate;
+
 
 /**
- * Created by mian on 2017-01-02.
+ * Extends JPanel, shows loading screen.
+ *
+ * @author Michael Andersson
+ * @version 4 January 2017
  */
 public class LoadingScreen extends JPanel{
 
-    private JLabel imageLabel;
-    private ImageIcon image;
-
-    public LoadingScreen(){
+    /**
+     * Constructor for LoadingScreen.
+     */
+    public LoadingScreen(Dimension d){
         super();
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(d);
 
-        this.imageLabel = new JLabel();
-        this.image = new ImageIcon("images/loading.gif");
+        JLabel imageLabel = new JLabel();
+        ImageIcon image = new ImageIcon("images/loading.gif");
 
         imageLabel.setIcon(image);
         this.add(imageLabel, BorderLayout.CENTER);

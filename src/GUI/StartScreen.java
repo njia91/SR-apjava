@@ -9,15 +9,24 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by michael on 12/31/16.
+ *
+ * StartScreen for the program.
+ *
+ * Just loads an image.
+ *
+ * @author Michael Andersson
+ * @version 4 January 2017
  */
 public class StartScreen extends JPanel{
 
 
-
-    public StartScreen()   {
+    /**
+     * Constructor for StartScreen
+     * @param d Dimension
+     */
+    public StartScreen(Dimension d)   {
         super();
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(d);
         Border border = BorderFactory.createEmptyBorder(2, 2,2,2);
         super.setBorder(border);
         this.setLayout(new BorderLayout());

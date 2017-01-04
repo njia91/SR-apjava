@@ -1,7 +1,5 @@
 package SwedishRadioInfo;
 
-import kotlin.reflect.jvm.internal.impl.descriptors.EffectiveVisibility;
-
 import java.net.URL;
 import java.util.Date;
 
@@ -17,7 +15,14 @@ public class ProgramInformation {
     private Date episodeDate_End;
 
 
-
+    /**
+     * Constructor for ProgramInformation.
+     * @param title String
+     * @param description String
+     * @param image URL
+     * @param episodeDate_Start Date
+     * @param episodeDate_End Date
+     */
     public ProgramInformation(String title, String description,
                               URL image, Date episodeDate_Start,
                               Date episodeDate_End ) {
@@ -28,25 +33,42 @@ public class ProgramInformation {
         this.episodeDate_End = episodeDate_End;
     }
 
+    /**
+     * Getter for program title.
+     * @return String
+     */
     public String getTitle() {
         return title;
     }
 
-
+    /**
+     * Getter for program description.
+     * @return String
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Getter for program image.
+     * @return URL
+     */
     public URL getImage() {
         return image;
     }
 
-
-
+    /**
+     * Getter for episode start date.
+     * @return Date
+     */
     public Date getEpisodeDate_Start() {
         return episodeDate_Start;
     }
 
+    /**
+     * Getter for episode end date.
+     * @return Date
+     */
     public Date getEpisodeDate_End() {
         return episodeDate_End;
     }

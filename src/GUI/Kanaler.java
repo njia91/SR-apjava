@@ -1,6 +1,7 @@
 package GUI;
 
 
+import Controller.EventController;
 import Controller.GUIEventManager;
 //import org.apache.ivy.core.event.EventManager;
 
@@ -13,28 +14,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Extends JMenu. The menu is dynamically loaded depending
+ * on the number of categories and channels.
+ *
  * @author Michael Andersson
+ * @version 4 January 2017
  */
 public class Kanaler extends JMenu{
 
-    private GUIEventManager eventManager;
+    private EventController eventManager;
 
-    public Kanaler(GUIEventManager eventManager){
+    /**
+     * Constructor for Kanaler
+     * @param eventManager reference to an eventManager.
+     */
+    public Kanaler(EventController eventManager){
         super("Kanaler");
         this.eventManager = eventManager;
+
+        /* If the menu is selected update and display categories
+        *  and channels. */
         this.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-
                 updateChannels();
             }
-
             @Override
             public void menuDeselected(MenuEvent e) {
                 Kanaler menu = (Kanaler)e.getSource();
                 menu.removeAll();
             }
-
             @Override
             public void menuCanceled(MenuEvent e) {
                 Kanaler menu = (Kanaler)e.getSource();
@@ -44,7 +53,10 @@ public class Kanaler extends JMenu{
 
     }
 
-
+    /**
+     * This class will get the latest update from the
+     * SwedishRadio class, calls it via a EventManager.
+     */
     private void updateChannels(){
         Map <String, ArrayList<String>> categoryMap =
                 eventManager.getChannelNames();
@@ -68,6 +80,10 @@ public class Kanaler extends JMenu{
         }
     }
 
+    /**
+     * Action listener for each button.
+     * @param e ActionEvent
+     */
     private void loadChannel(ActionEvent e){
         JMenuItem button = (JMenuItem) e.getSource();
         eventManager.showChannelTableau(button.getText());

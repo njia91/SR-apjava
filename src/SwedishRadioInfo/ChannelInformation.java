@@ -4,59 +4,83 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Created by mian on 2016-12-28.
+ * Wrapper class. Keeps information about a channel.
+ * Its name, id, Image, type, URL to schedule and
+ * a list of program information.
+ *
+ * @author Michael Andersson
+ * @version 4 January 2017
  */
 public class ChannelInformation{
 
     private String name;
-    private int id;
     private URL image;
-    private URL liveAudio;
     private String channelType;
     private String schedule;
     private List<ProgramInformation> programInfo;
 
 
-
-    public ChannelInformation(String name, int id, URL image,
-                              URL liveAudio, String channelType,
+    /**
+     * Constructor for ChannelInformation
+     * @param name String
+     * @param image URL
+     * @param channelType String
+     * @param schedule String
+     */
+    public ChannelInformation(String name, URL image,
+                              String channelType,
                               String schedule) {
         this.name = name;
-        this.id = id;
         this.image = image;
-        this.liveAudio = liveAudio;
         this.channelType = channelType;
         this.schedule = schedule;
     }
 
+    /**
+     * Getter for channel name.
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
-    public int getId() {
-        return id;
-    }
 
+    /**
+     * Getter for channel image.
+     * @return URL
+     */
     public URL getImage() {
         return image;
     }
 
-    public URL getLiveAudio() {
-        return liveAudio;
-    }
-
+    /**
+     * Getter for channel type.
+     * @return String
+     */
     public String getChannelType() {
         return channelType;
     }
 
+    /**
+     * Getter for channel tableau.
+     * @return String
+     */
     public String getSchedule() {
         return schedule;
     }
 
+    /**
+     * Getter for a list of programinformation.
+     * @return List<ProgramInformation>
+     */
     public List<ProgramInformation> getProgramInfo() {
         return programInfo;
     }
 
+    /**
+     * Setter for ProgramInformation.
+     * @param programInfo List<ProgramInformation>
+     */
     public void setProgramInfo(List<ProgramInformation> programInfo) {
         this.programInfo = programInfo;
     }

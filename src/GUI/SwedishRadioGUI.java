@@ -13,31 +13,43 @@ import java.net.URL;
 
 
 /**
+ * The GUI for the Program. Uses CardLayout for displaying
+ * different panels.
+ *
  * @author Michael Andersson
+ * @version 4 January 2017
  */
 public class SwedishRadioGUI extends JFrame{
 
     private JPanel panelCont;
-    private StartScreen startScreen;
+    private JPanel startScreen;
     private TableauPanel programTableau;
     private CardLayout layout;
     private ProgramDescription programDescription;
-    private LoadingScreen loadingScreen;
+    private JPanel loadingScreen;
     private JLabel status;
 
+    // Key Words for the CardLayout
     private static String START = "1";
     private static String PROGRAM = "2";
     private static String PROGRAMDESCRIPTION = "3";
     private static String LOADING = "4";
 
-    public SwedishRadioGUI(StartScreen startScreen,
+
+    /**
+     * Constructor for SwedishRadioGUI
+     * @param startScreen JPanel
+     * @param programTableau TableauPanel
+     * @param programSpecifics ProgramDescription
+     * @param loadingScreen LoadingScreen
+     */
+    public SwedishRadioGUI(JPanel startScreen,
                            TableauPanel programTableau,
                            ProgramDescription programSpecifics,
-                           LoadingScreen loadingScreen){
+                           JPanel loadingScreen){
 
         super("Sveriges Radio");
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        super.setPreferredSize(new Dimension(600, 600));
         this.setLayout(new BorderLayout());
         this.startScreen = startScreen;
         this.programTableau = programTableau;
@@ -56,6 +68,9 @@ public class SwedishRadioGUI extends JFrame{
     }
 
 
+    /**
+     * Sets up the CardLayout
+     */
     private void setUpCardLayout(){
         panelCont = new JPanel();
         layout = new CardLayout();
@@ -67,40 +82,64 @@ public class SwedishRadioGUI extends JFrame{
         this.add(panelCont);
     }
 
-    public void loadProgramTableau(URL imgURL, ChannelLibrary programInfoModel,
-                                  ProgramRenderer renderer){
+    /**
+     * Loads the program tableau. Passes these parameters on to TableauPanel.
+     * @param imgURL URL
+     * @param programInfoModel ChannelLibrary
+     */
+    public void loadProgramTableau(URL imgURL, ChannelLibrary programInfoModel){
         programTableau.setImage(imgURL);
-        programTableau.setTable(programInfoModel, renderer);
+        programTableau.setTable(programInfoModel);
         layout.show(panelCont, PROGRAM);
     }
 
+    /**
+     * Lads the program description. Passes on these parameters to the
+     * ProgramDescription panel.
+     * @param pInfo ProgramInfo
+     * @param listener ActionListener
+     */
     public void loadProgramDescription(ProgramInformation pInfo,
                                        ActionListener listener){
-        programDescription.setUpProgramInfo(pInfo, listener);
+        programDescription.setupProgramInfo(pInfo, listener);
         layout.show(panelCont, PROGRAMDESCRIPTION);
 
 
     }
 
+    /**
+     * Tells gui to return to channelTableau.
+     */
     public void returnToChannelTableau() {
         layout.show(panelCont, PROGRAM);
     }
 
+    /**
+     * Tells gui to show loading screen
+     */
     public void loadLoadingScreen(){
         layout.show(panelCont, LOADING);
     }
 
+    /**
+     * Tells gui to show start screen
+     */
     public void loadStartScreen(){
-        this.
-        layout.show(panelCont, START);
+        this.layout.show(panelCont, START);
 
     }
 
-
+    /**
+     * Sets the StatusBar text
+     * @param message String
+     */
     public void setStatusBarText(String message){
         status.setText(message);
     }
 
+    /**
+     * Setup the statusbar.
+     */
     private void setUpStatusBar(){
         JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusBar.setBorder(new CompoundBorder(
@@ -111,6 +150,18 @@ public class SwedishRadioGUI extends JFrame{
         this.getContentPane().add(statusBar, BorderLayout.SOUTH);
     }
 
-
+    /**
+     * Sets the state for KanalMenu, can disable or enable it.
+     * @param state Boolean
+     */
+    public void setStateForKanalMenu(Boolean state){
+        JMenuBar bar = this.getJMenuBar();
+        for( int i = 0; i < bar.getMenuCount(); i++){
+            JMenu menu = bar.getMenu(i);
+            if(menu instanceof Kanaler){
+                menu.setEnabled(state);
+            }
+        }
+    }
 
 }

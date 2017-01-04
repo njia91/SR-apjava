@@ -29,6 +29,8 @@ import java.util.List;
  * channels program schedule and store information about each
  * program within a 12 hour span.
  *
+ * It uses DOM to parse the XML.
+ *
  * @version 1.0
  * @author Michael Andersson (mian)
  */
@@ -36,20 +38,18 @@ public class ParseSRTableau {
 
     private List<ChannelInformation> channelInfo;
 
-    public ParseSRTableau() {
-
-        channelInfo = new ArrayList<>();
-    }
-
-
 
     /**
-     *
+     * Given an URL to SR API this class will parse the URL,
+     * which should be an XML, and store information about each
+     * channel in a list.
      * @param srURL String
      * @return List<ChannelInformation>
-     * @throws IOException
+     * @throws IOException In case something went wrong with the parsning or
+     *                     the connection to URL.
      */
     public List<ChannelInformation> parseChannels(String srURL) throws IOException {
+        this.channelInfo = new ArrayList<>();
         Element rootNode;
         /* Open and parse XML-file */
         Document xmlChannels = createDOMTree(openURL(srURL).openStream());
@@ -62,9 +62,9 @@ public class ParseSRTableau {
     }
 
     /**
-     *
-     * @param cInfo
-     * @throws IOException
+     * This method will parse the tableau for an specific channel.
+     * @param cInfo ChannelInfomation
+     * @throws IOException is thrown is something went wrong.
      */
     public void parseChannelTableau(ChannelInformation cInfo) throws IOException {
                 /* Setting upp yesterdays and tomorrows date.
@@ -108,6 +108,8 @@ public class ParseSRTableau {
 
                 parseProgram((Element) scheduleRoot.getElementsByTagName
                         ("schedule").item(0), programInfo);
+            }else{
+                throw new IOException("Can't find a channel tableau");
             }
         }
         cInfo.setProgramInfo(programInfo);
@@ -115,7 +117,13 @@ public class ParseSRTableau {
     }
 
 
-
+    /**
+     *  This method will parse the the schedule tableau for
+     *  each channel. It will add the information in the list
+     *  given from the channel object.
+     * @param schedule Element from the DOM tree.
+     * @param programInfo List<ProgramInformation>
+     */
     private void parseProgram(Element schedule,
                               List<ProgramInformation> programInfo){
         String title;
@@ -132,9 +140,9 @@ public class ParseSRTableau {
         NodeList episodeList = schedule.
                 getElementsByTagName("scheduledepisode");
 
+        /* Parses the information about each episode. */
         for(int i = 0; i < episodeList.getLength(); i++){
             Element episode = (Element) episodeList.item(i);
-
             title = episode.getElementsByTagName
                     ("title").item(0).getTextContent();
 
@@ -166,7 +174,7 @@ public class ParseSRTableau {
                 System.err.println("Invalid Date format.");
                 System.exit(1);
             }
-
+            /* If episode is within date, keep it in the list.*/
             if (checkTimeInterval(episodeDate_Start, currentDate)){
                 programInfo.add(new ProgramInformation(title,
                         description, image, episodeDate_Start,
@@ -177,10 +185,11 @@ public class ParseSRTableau {
 
 
     /**
-     *
-     * @param episodeDate
-     * @param currentDate
-     * @return
+     * This method will check if an episode plays within
+     * twelve hours of current date and time.
+     * @param episodeDate Date
+     * @param currentDate Date
+     * @return boolean
      */
     private boolean checkTimeInterval(Date episodeDate,
                                       Date currentDate){
@@ -202,52 +211,56 @@ public class ParseSRTableau {
     }
 
     /**
-     *
-     * @param channels
+     * This method will parse though all channels and the information
+     * in a list. Some channels are missing some information, these
+     * variables will be put to null.
+     * @param channels Element from the DOM tree
      */
     private void parseChannels(Element channels){
         NodeList channelList = channels.getElementsByTagName("channel");
         String name;
-        int id;
         URL image;
-        URL liveAudio;
         String channelType;
         String schedule;
 
+        /* For each channel in the XLM, parses it and stores it
+        *  in an object of type ChannelInformation.
+        *  Some channels are missing certain elements, these
+        *  variables will be set to null.*/
         for(int i = 0; i < channelList.getLength(); i++){
             Element channel = (Element) channelList.item(i);
             name = channel.getAttribute("name");
-            id = Integer.parseInt(channel.getAttribute("id"));
-            image = openURL(channel.getElementsByTagName("image").
-                    item(0).getTextContent());
 
-            Element audioElement = (Element) channel.
-                    getElementsByTagName("liveaudio").item(0);
-            liveAudio = openURL(audioElement.
-                    getElementsByTagName("url").item(0).getTextContent());
+            try{
+                image = openURL(channel.getElementsByTagName("image").
+                        item(0).getTextContent());
+            } catch (NullPointerException e){
+                image = null;
+            }
 
-
-
-
+            try{
             channelType = channel.getElementsByTagName
                     ("channeltype").item(0).getTextContent();
+            } catch (NullPointerException e){
+                channelType = null;
+            }
 
-             /* Some channels don't have an URL to their schedule. */
             try {
                 schedule = channel.getElementsByTagName
                         ("scheduleurl").item(0).getTextContent();
-
             }catch (NullPointerException e){
                 schedule = null;
             }
-            channelInfo.add(new ChannelInformation(name, id, image,
-                    liveAudio, channelType, schedule));
-
+            channelInfo.add(new ChannelInformation(name, image,
+                    channelType, schedule));
         }
-
-
     }
 
+    /**
+     * Will open an URL from a string.
+     * @param srURL String
+     * @return URL
+     */
     private URL openURL(String srURL){
         try {
             return new URL(srURL);
@@ -257,7 +270,7 @@ public class ParseSRTableau {
     }
 
     /**
-     * Will parse a given XML and return a DOM-tree stuctur.
+     * Will parse a given XML and return a DOM-tree structure.
      * @param input InputStream
      * @return Document
      * @throws IOException If an error occurred when opening XML-file.
@@ -265,7 +278,6 @@ public class ParseSRTableau {
     private Document createDOMTree(InputStream input) throws IOException {
         Document doc;
         try{
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.parse(input);
@@ -275,7 +287,6 @@ public class ParseSRTableau {
                 | org.xml.sax.SAXException e) {
             throw new IOException("Can not open XML");
         }
-
         return doc;
 
     }
