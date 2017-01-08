@@ -15,8 +15,9 @@ import java.util.*;
 public class SwedishRadio implements RadioInformation {
 
     private String srURL;
-    private ParseSRTableau srParser;
+    private XMLParseChannels channelParser;
     private List<ChannelInformation> channelInfo;
+    private XMLParseTableau tableauParser;
     private Map<String, ArrayList<String>> channelByCategory;
 
     /**
@@ -24,24 +25,25 @@ public class SwedishRadio implements RadioInformation {
      * @param srURL URL to Swedish radio API
      */
     public SwedishRadio(String srURL){
+        tableauParser = new XMLParseTableau();
         this.srURL = srURL;
-        update();
+       // update();
 
     }
 
     /**
      * This method will call SR API and update the
      * channel information. For each update, the method
-     * will create a new object of type ParseSRTableau.
+     * will create a new object of type XMLParseChannels.
      * This is to prevent race conditions between threads.
      *
      * @return information about the parsing, if it was a success or not.
      */
     public String update(){
         List<ChannelInformation> tempList;
-        srParser = new ParseSRTableau();
+        channelParser = new XMLParseChannels();
         try {
-            tempList = srParser.parseChannels(this.srURL);
+            tempList = channelParser.parseChannels(this.srURL);
         } catch (IOException e) {
             return "Något fel: Kunde ej uppdatera kanal tablån. "
                     + "Se över din internetanslutning.";
@@ -67,9 +69,14 @@ public class SwedishRadio implements RadioInformation {
             throws IllegalArgumentException, IOException {
         for(ChannelInformation cInfo: channelInfo){
             if(cInfo.getName().equals(name)){
-                srParser.parseChannelTableau(cInfo);
-                cInfo.getProgramInfo().sort(Comparator.comparing(
-                        ProgramInformation::getEpisodeDate_Start));
+                /* Only parse channel tableau if
+                 it hasn't already been parsed. */
+                if(cInfo.getProgramInfo() == null) {
+                    cInfo.setProgramInfo(tableauParser.
+                            parseChannelTableau(cInfo.getSchedule()));
+                    cInfo.getProgramInfo().sort(Comparator.comparing(
+                            ProgramInformation::getEpisodeDate_Start));
+                }
                 return cInfo;
             }
         }

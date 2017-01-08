@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  *  Simple utility class to format date format.
@@ -21,9 +22,9 @@ public class SpecificDateFormat {
      * Constructor for SpecificDateFormat
      */
     public SpecificDateFormat(){
-        this.dateFormat = new SimpleDateFormat("yyyy MMMM, EE  HH:mm",
-                new Locale("Swedish", "Sweden"));
-        this.timeAndDay = new SimpleDateFormat("EEEE hh:mm");
+
+        this.dateFormat = new SimpleDateFormat("yyyy/MM/dd: HH:mm");
+        this.timeAndDay = new SimpleDateFormat("EEEE HH:mm");
     }
 
     /**
@@ -32,7 +33,6 @@ public class SpecificDateFormat {
      * @return String of date
      */
     public String formatToString(Date d){
-
         return dateFormat.format(d);
     }
 

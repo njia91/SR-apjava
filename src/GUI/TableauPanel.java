@@ -33,6 +33,10 @@ public class TableauPanel extends JPanel {
         JScrollPane tableScroll = new JScrollPane(tableauTable);
         this.add(tableScroll, BorderLayout.CENTER);
         renderer = new ProgramRenderer();
+        tableauTable.setRowSelectionAllowed(false);
+        tableauTable.setColumnSelectionAllowed(false);
+        setUpTableListener();
+
     }
 
 
@@ -69,21 +73,29 @@ public class TableauPanel extends JPanel {
     /**
      * Sets up the Jtable with the current information
      * @param newProgramInfo ChannelLibrary - the model.
-     * @param renderer A renderer for the
      */
     public void setTable(ChannelLibrary newProgramInfo){
 
         tableauTable.setModel(newProgramInfo);
         tableauTable.getColumn("Program").setCellRenderer(renderer);
+        this.revalidate();
+    }
+
+    /**
+     * Setup table listener
+     */
+    private void setUpTableListener(){
         ListSelectionModel l = tableauTable.getSelectionModel();
         l.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         l.addListSelectionListener(e -> {
             if(e.getValueIsAdjusting()){
-                eCtrl.showProgramInfo(tableauTable.getSelectedRow());
-
+                int row = tableauTable.getSelectedRow();
+                if(row >= 0) {
+                    tableauTable.clearSelection();
+                    eCtrl.showProgramInfo(row);
+                }
             }
         });
-        this.revalidate();
     }
 
 }

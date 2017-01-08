@@ -88,6 +88,7 @@ public class SwedishRadioGUI extends JFrame{
      * @param programInfoModel ChannelLibrary
      */
     public void loadProgramTableau(URL imgURL, ChannelLibrary programInfoModel){
+        setStatusBarText("Klicka på en rad för att visa mer information.");
         programTableau.setImage(imgURL);
         programTableau.setTable(programInfoModel);
         layout.show(panelCont, PROGRAM);
@@ -101,6 +102,7 @@ public class SwedishRadioGUI extends JFrame{
      */
     public void loadProgramDescription(ProgramInformation pInfo,
                                        ActionListener listener){
+        setStatusBarText("Klicka på knappen för att återgå till tablån.");
         programDescription.setupProgramInfo(pInfo, listener);
         layout.show(panelCont, PROGRAMDESCRIPTION);
 
@@ -111,6 +113,7 @@ public class SwedishRadioGUI extends JFrame{
      * Tells gui to return to channelTableau.
      */
     public void returnToChannelTableau() {
+        setStatusBarText("Klicka på en rad för att visa mer information.");
         layout.show(panelCont, PROGRAM);
     }
 
@@ -118,6 +121,7 @@ public class SwedishRadioGUI extends JFrame{
      * Tells gui to show loading screen
      */
     public void loadLoadingScreen(){
+        setStatusBarText("Vänligen vänta. Kanaltablån uppdateras...");
         layout.show(panelCont, LOADING);
     }
 
@@ -125,6 +129,7 @@ public class SwedishRadioGUI extends JFrame{
      * Tells gui to show start screen
      */
     public void loadStartScreen(){
+        status.setText("Använd menyn i högra hörnet för att välja kanal.");
         this.layout.show(panelCont, START);
 
     }
@@ -135,6 +140,21 @@ public class SwedishRadioGUI extends JFrame{
      */
     public void setStatusBarText(String message){
         status.setText(message);
+    }
+
+
+    /**
+     * Sets the state for KanalMenu, can disable or enable it.
+     * @param state Boolean
+     */
+    public void setStateForKanalMenu(Boolean state){
+        JMenuBar bar = this.getJMenuBar();
+        for( int i = 0; i < bar.getMenuCount(); i++){
+            JMenu menu = bar.getMenu(i);
+            if(menu instanceof Kanaler){
+                menu.setEnabled(state);
+            }
+        }
     }
 
     /**
@@ -150,18 +170,5 @@ public class SwedishRadioGUI extends JFrame{
         this.getContentPane().add(statusBar, BorderLayout.SOUTH);
     }
 
-    /**
-     * Sets the state for KanalMenu, can disable or enable it.
-     * @param state Boolean
-     */
-    public void setStateForKanalMenu(Boolean state){
-        JMenuBar bar = this.getJMenuBar();
-        for( int i = 0; i < bar.getMenuCount(); i++){
-            JMenu menu = bar.getMenu(i);
-            if(menu instanceof Kanaler){
-                menu.setEnabled(state);
-            }
-        }
-    }
 
 }

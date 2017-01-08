@@ -55,7 +55,6 @@ public class ProgramTable extends JTable{
             c.setBackground(Color.white);
         }else if (currentDate.after(endDate)){
             c.setBackground(Color.lightGray);
-
         }
         return c;
     }

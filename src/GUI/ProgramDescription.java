@@ -39,11 +39,10 @@ public class ProgramDescription extends JPanel{
         this.setLayout(new BorderLayout());
         this.uppPanel = new JPanel();
         this.middle = new JPanel();
-        JPanel infoPanel = new JPanel();
         this.setPreferredSize(d);
         this.add(uppPanel, BorderLayout.NORTH);
         this.add(middle, BorderLayout.SOUTH);
-        infoPanel = new JPanel();
+        JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel,
                 BoxLayout.Y_AXIS));
         uppPanel.add(infoPanel, BorderLayout.EAST);

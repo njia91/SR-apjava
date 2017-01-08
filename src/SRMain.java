@@ -41,11 +41,16 @@ public class SRMain {
         gui.setJMenuBar(menuBar);
         gui.setPreferredSize(d);
 
+        String message = sr.update();
+
+        if(!message.equals("Framgång: Kanaltablån är nu uppdaterad.")){
+            gui.setStatusBarText("Kan ej ansluta till Svergies Radio, se över din anslutning.");
+        }
+
 
         try {
             SwingUtilities.invokeAndWait(() ->{
                     gui.setVisible(true);
-                    System.out.println("Avslutar");
         });
         } catch (InterruptedException | InvocationTargetException e) {
             e.printStackTrace();

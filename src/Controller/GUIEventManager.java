@@ -1,14 +1,10 @@
 package Controller;
 
 import GUI.ChannelLibrary;
-import GUI.ProgramRenderer;
 import GUI.SwedishRadioGUI;
 import SwedishRadioInfo.ChannelInformation;
-import SwedishRadioInfo.ProgramInformation;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -49,7 +45,6 @@ public class GUIEventManager implements EventController {
         this.sr = sr;
         this.gui = gui;
         this.scheduledPool = Executors.newScheduledThreadPool(2);
-
         setupAutomaticUpdateThread();
     }
 
@@ -68,7 +63,7 @@ public class GUIEventManager implements EventController {
         gui.setStateForKanalMenu(false);
         gui.loadLoadingScreen();
         scheduledPool.submit(() -> {
-            String message = sr.updateChannelInformation();
+            String message = sr.update();
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException ignored){
@@ -89,7 +84,7 @@ public class GUIEventManager implements EventController {
     public void showChannelTableau(String name){
         scheduledPool.submit(() -> {
             try {
-                currentChannel = sr.getChannelInfo(name);
+                currentChannel = sr.retrieveChannelInfo(name);
                 ChannelLibrary tableModel = new ChannelLibrary(
                         currentChannel.getProgramInfo());
                 SwingUtilities.invokeLater(() -> gui.loadProgramTableau(
@@ -97,10 +92,11 @@ public class GUIEventManager implements EventController {
                         tableModel));
             } catch (IOException e) {
                 SwingUtilities.invokeLater(() -> {
+                    gui.loadStartScreen();
                     gui.setStatusBarText
                         ("Kan ej ladda kanaltablån. " +
-                        "Internet problem eller är kanalen utan tablå");
-                    gui.loadStartScreen();
+                        "Internet problem eller har kanalen ingen tablå");
+
                 });
             }
         });
@@ -122,7 +118,7 @@ public class GUIEventManager implements EventController {
      * @return Map<String, ArrayList<String>>
      */
     public Map<String, ArrayList<String>> getChannelNames(){
-        return sr.getCategories();
+        return sr.getChannelByCategory();
     }
 
 

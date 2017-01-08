@@ -34,6 +34,7 @@ public class ChannelInformation{
         this.image = image;
         this.channelType = channelType;
         this.schedule = schedule;
+        programInfo = null;
     }
 
     /**
